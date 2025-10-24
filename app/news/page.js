@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import NewsCard from '../../components/NewsCard'; // Adjust path if needed
+import NewsCard from '../components/newscard';
+
+
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
