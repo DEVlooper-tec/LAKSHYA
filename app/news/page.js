@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import NewsCard from '../components/NewsCard'; // ✅ Make sure the filename matches exactly (case-sensitive)
+import NewsCard from '../components/newscard'; // ✅ Make sure the filename matches exactly (case-sensitive)
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
