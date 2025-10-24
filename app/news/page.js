@@ -1,18 +1,23 @@
 'use client';
 import { useEffect, useState } from 'react';
-import NewsCard from '../components/newscard';
+import NewsCard from '../components/NewsCard'; // ✅ Make sure the filename matches exactly (case-sensitive)
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    fetch('/api/news')
-      .then(res => res.json())
-      .then(data => {
-        console.log('Fetched articles:', data.articles); // ✅ Add this
+    const fetchArticles = async () => {
+      try {
+        const res = await fetch(`${window.location.origin}/api/news`); // ✅ Absolute URL for Vercel
+        const data = await res.json();
+        console.log('Fetched articles:', data.articles); // ✅ Debug log
         setArticles(data.articles);
-      })
-      .catch(err => console.error('Failed to fetch news:', err));
+      } catch (err) {
+        console.error('Failed to fetch news:', err);
+      }
+    };
+
+    fetchArticles();
   }, []);
 
   return (
@@ -21,9 +26,11 @@ export default function NewsPage() {
       {articles.length === 0 ? (
         <p>Loading articles...</p>
       ) : (
-        articles.map((article, index) => (
-          <NewsCard key={index} article={article} />
-        ))
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {articles.map((article, index) => (
+            <NewsCard key={index} article={article} />
+          ))}
+        </div>
       )}
     </div>
   );
