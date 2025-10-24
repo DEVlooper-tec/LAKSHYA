@@ -25,4 +25,3 @@ export default function NewsCard({ article }) {
     </div>
   );
 }
-s
