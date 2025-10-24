@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Home, NewsCard } from './news/page'
+
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
@@ -23,7 +25,7 @@ export default function NewsPage() {
     </div>
   );
 }
-export default function Home() {
+export  function Home() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="p-6 bg-white rounded-lg shadow-md text-center">
@@ -33,7 +35,7 @@ export default function Home() {
     </div>
   );
 }
-export default function NewsCard() {
+export  function NewsCard() {
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
       <div className="md:flex">
