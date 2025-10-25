@@ -22,26 +22,28 @@ export default function NewsCard({ article }: Props) {
   return (
     <div
       data-aos="fade-up"
-      className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4"
+      className="bg-[#1a1a1a] text-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
     >
       <div className="md:flex">
-        <div className="md:shrink-0">
+        <div className="md:w-1/3">
           <img
-            className="h-48 w-full object-cover md:h-full md:w-48"
+            className="h-full w-full object-cover"
             src={article.urlToImage || 'https://via.placeholder.com/150'}
             alt={article.title}
           />
         </div>
-        <div className="p-4">
-          <h2 className="text-xl font-semibold text-blue-600">{article.title}</h2>
-          <p className="mt-2 text-gray-500 text-sm">{article.description}</p>
+        <div className="p-4 md:w-2/3">
+          <h2 className="text-lg font-bold text-indigo-400 hover:text-indigo-300 transition-colors duration-200">
+            {article.title}
+          </h2>
+          <p className="mt-2 text-sm text-gray-300">{article.description}</p>
           <a
             href={article.url}
-            className="mt-3 inline-block text-sm text-blue-500 hover:underline"
+            className="mt-3 inline-block text-sm text-indigo-500 hover:underline"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Read More
+            Read More →
           </a>
         </div>
       </div>
