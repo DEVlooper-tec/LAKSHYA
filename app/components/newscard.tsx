@@ -3,7 +3,18 @@ import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-export default function NewsCard({ article }) {
+interface Article {
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string;
+}
+
+interface Props {
+  article: Article;
+}
+
+export default function NewsCard({ article }: Props) {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
@@ -37,4 +48,3 @@ export default function NewsCard({ article }) {
     </div>
   );
 }
-
