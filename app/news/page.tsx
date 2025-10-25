@@ -1,91 +1,95 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Typewriter from 'typewriter-effect';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
-type Article = {
+interface Article {
   title: string;
   description: string;
-  imageUrl: string;
-  link: string;
-};
-
-type NewsCardProps = Article;
-
-function NewsCard({ title, description, imageUrl, link }: NewsCardProps) {
-  return (
-    <div className="max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">{title}</h2>
-        <p className="mt-2 text-gray-700 dark:text-gray-300 text-sm">{description}</p>
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 inline-block text-sm text-blue-500 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-400 hover:underline"
-        >
-          Read More
-        </a>
-      </div>
-    </div>
-  );
+  url: string;
+  urlToImage: string;
 }
 
-export default function NewsSection() {
+export default function NewsPage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [showFinalHeading, setShowFinalHeading] = useState(false);
 
   useEffect(() => {
-    fetch(
-      'https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=dd21f00ef09242ddb62f76297583c3d9'
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const formatted = Array.isArray(data.articles)
-          ? data.articles.map((item: any) => ({
-              title: item.title,
-              description: item.description,
-              imageUrl: item.urlToImage || 'https://via.placeholder.com/300x200',
-              link: item.url,
-            }))
-          : [];
-        setArticles(formatted);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Failed to load news.');
-        setLoading(false);
-      });
+    AOS.init({ duration: 800, once: true });
+
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news'); // ✅ Use relative path
+        const data = await res.json();
+        setArticles(data.articles || []);
+      } catch (err) {
+        console.error('Failed to fetch news:', err);
+      }
+    };
+
+    fetchNews();
   }, []);
 
-  if (loading)
-    return (
-      <p className="text-center text-gray-500 dark:text-gray-300 mt-10">Loading tech news...</p>
-    );
-
-  if (error)
-    return <p className="text-center text-red-500 dark:text-red-400 mt-10">{error}</p>;
-
   return (
-    <main className="p-6 bg-slate-50 dark:bg-gray-950 min-h-screen text-gray-800 dark:text-gray-100">
-      <h1 className="text-center text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4 whitespace-nowrap overflow-hidden border-r-4 border-blue-500 animate-typing">
-        Tech News Highlights
+    <div className="min-h-screen bg-[#0f0f0f] text-white px-6 py-10 overflow-hidden">
+      {/* Heading */}
+      <h1
+        data-aos="fade-down"
+        className="text-3xl font-extrabold text-center mb-8 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent"
+      >
+        {!showFinalHeading ? (
+          <Typewriter
+            options={{
+              autoStart: true,
+              loop: false,
+              delay: 50,
+            }}
+            onInit={(typewriter) => {
+              typewriter
+                .typeString('📰 Latest Tech News & Updates')
+                .callFunction(() => setShowFinalHeading(true))
+                .start();
+            }}
+          />
+        ) : (
+          '📰 Latest Tech News & Updates'
+        )}
       </h1>
-      <p className="text-center text-gray-600 dark:text-gray-400 text-lg mb-10">
-        Curated stories from the world of technology
-      </p>
-      <footer className="mt-20 text-center text-xs text-gray-500 dark:text-gray-400">
-  Built by @Devang · Powered by NewsAPI · Last updated: October 2025
-</footer>
 
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article, index) => (
-          <NewsCard key={index} {...article} />
-        ))}
-      </div>
-    </main>
+      {/* News Cards */}
+      {articles.length === 0 ? (
+        <p className="text-center text-gray-400">Loading news...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {articles.map((item, index) => (
+            <div
+              key={index}
+              data-aos="fade-up"
+              className="group relative bg-[#1a1a1a] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300"
+            >
+              <img
+                src={item.urlToImage || '/fallback.jpg'}
+                alt={item.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-5 relative z-10">
+                <h2 className="text-xl font-semibold mb-2">{item.title}</h2>
+                <p className="text-gray-400 mb-4">{item.description}</p>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-sm text-blue-400 hover:text-blue-300 transition"
+                >
+                  Read Full Article →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
