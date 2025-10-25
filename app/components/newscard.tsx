@@ -1,11 +1,23 @@
+'use client';
+import { useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 export default function NewsCard({ article }) {
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
+
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
+    <div
+      data-aos="fade-up"
+      className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4"
+    >
       <div className="md:flex">
         <div className="md:shrink-0">
           <img
             className="h-48 w-full object-cover md:h-full md:w-48"
-            src={article.urlToImage || "https://via.placeholder.com/150"}
+            src={article.urlToImage || 'https://via.placeholder.com/150'}
             alt={article.title}
           />
         </div>
@@ -25,3 +37,4 @@ export default function NewsCard({ article }) {
     </div>
   );
 }
+
